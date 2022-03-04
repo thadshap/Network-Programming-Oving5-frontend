@@ -1,31 +1,53 @@
 <template>
-  <div id="main">
-    <h1>Code Editor</h1>
-    <textarea id="code"></textarea>
-    <button id="run">Run</button>
-    <div id="result"></div>
-  </div>
+  <body>
+
+  <h1>Online Compiler</h1>
+
+  <textarea required id="sourcecode" v-model="code"
+            placeholder="type in your code here">
+    </textarea>
+
+  <button type="button" id="btn" @click="sourceCode">Run</button>
+  <h4>Output:</h4>
+
+  <textarea readonly v-model="output"
+            name="output"></textarea>
+  </body>
 </template>
 
+<script>
+import postservice from '../services/PostServices.js'
+export default {
+  data(){
+    return{
+      code: '',
+      output: '',
+    }
+  },
+  methods:{
+    sourceCode: async function() {
+      await postservice.create(this.code).then(function(response){
+        const result = response.data.output;
+        console.log(result)
+        this.output=String(result)
+        console.log(this.output)
+      }.bind(this))
+    }
+  }
+}
+</script>
 
-
-<style scoped>
-h1{
-  text-align: center;
+<style>
+body{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 textarea{
-  width: 600px;
-  height: 500px;
-  margin: 20px 0 0 32%;
+  height: 40vh;
+  width: 60%;
 }
-#run{
-  margin-left: 10px;
-}
-#result{
-  display: flex;
-  width: 602px;
-  height: 50px;
-  border:1px solid black;
-  margin: 20px 0 0 32%;
+button{
+  padding: 5px;
 }
 </style>
